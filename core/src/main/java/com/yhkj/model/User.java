@@ -1,37 +1,37 @@
 package com.yhkj.model;
 
-import com.yhkj.utils.DateUtils;
-
 import java.util.Date;
 
 public class User {
     private Long userId;
 
-    private String phone;
+    private String realName;
 
-    private String password;
+    private String nickName;
 
-    private String username;
+    private String userPhone;
 
-    private String email;
+    private String userPassword;
 
-    private String address;
+    private String userEmail;
 
-    private Date createTime;
+    private String userAvatar;
 
-    private String avatar;
+    private String userIdcard;
 
-    private Integer userStatus;
+    private String userIdcardUrl;
 
     private Integer userLevel;
 
-    private UserShop userShop;
+    private Integer userStatus;
 
-    private String createTimeString;
+    private Date createTime;
 
-    public String getCreateTimeString() {
-        return createTime == null ? null : DateUtils.date2String(createTime, DateUtils.format2);
-    }
+    private Long recommendId;
+
+    private String wxId;
+
+    private String qqId;
 
     public Long getUserId() {
         return userId;
@@ -41,68 +41,68 @@ public class User {
         this.userId = userId;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getRealName() {
+        return realName;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone == null ? null : phone.trim();
+    public void setRealName(String realName) {
+        this.realName = realName == null ? null : realName.trim();
     }
 
-    public String getPassword() {
-        return password;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setPassword(String password) {
-        this.password = password == null ? null : password.trim();
+    public void setNickName(String nickName) {
+        this.nickName = nickName == null ? null : nickName.trim();
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserPhone() {
+        return userPhone;
     }
 
-    public void setUsername(String username) {
-        this.username = username == null ? null : username.trim();
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone == null ? null : userPhone.trim();
     }
 
-    public String getEmail() {
-        return email;
+    public String getUserPassword() {
+        return userPassword;
     }
 
-    public void setEmail(String email) {
-        this.email = email == null ? null : email.trim();
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword == null ? null : userPassword.trim();
     }
 
-    public String getAddress() {
-        return address;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setAddress(String address) {
-        this.address = address == null ? null : address.trim();
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail == null ? null : userEmail.trim();
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public String getUserAvatar() {
+        return userAvatar;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setUserAvatar(String userAvatar) {
+        this.userAvatar = userAvatar == null ? null : userAvatar.trim();
     }
 
-    public String getAvatar() {
-        return avatar;
+    public String getUserIdcard() {
+        return userIdcard;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar == null ? null : avatar.trim();
+    public void setUserIdcard(String userIdcard) {
+        this.userIdcard = userIdcard == null ? null : userIdcard.trim();
     }
 
-    public Integer getUserStatus() {
-        return userStatus;
+    public String getUserIdcardUrl() {
+        return userIdcardUrl;
     }
 
-    public void setUserStatus(Integer userStatus) {
-        this.userStatus = userStatus;
+    public void setUserIdcardUrl(String userIdcardUrl) {
+        this.userIdcardUrl = userIdcardUrl == null ? null : userIdcardUrl.trim();
     }
 
     public Integer getUserLevel() {
@@ -113,11 +113,43 @@ public class User {
         this.userLevel = userLevel;
     }
 
-    public UserShop getUserShop() {
-        return userShop;
+    public Integer getUserStatus() {
+        return userStatus;
     }
 
-    public void setUserShop(UserShop userShop) {
-        this.userShop = userShop;
+    public void setUserStatus(Integer userStatus) {
+        this.userStatus = userStatus;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Long getRecommendId() {
+        return recommendId;
+    }
+
+    public void setRecommendId(Long recommendId) {
+        this.recommendId = recommendId;
+    }
+
+    public String getWxId() {
+        return wxId;
+    }
+
+    public void setWxId(String wxId) {
+        this.wxId = wxId == null ? null : wxId.trim();
+    }
+
+    public String getQqId() {
+        return qqId;
+    }
+
+    public void setQqId(String qqId) {
+        this.qqId = qqId == null ? null : qqId.trim();
     }
 }

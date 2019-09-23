@@ -1,292 +1,213 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.yhkj.mapper.UserMapper">
-    <resultMap id="BaseResultMap" type="com.yhkj.model.User">
-        <id column="user_id" property="userId" jdbcType="BIGINT"/>
-        <result column="phone" property="phone" jdbcType="VARCHAR"/>
-        <result column="password" property="password" jdbcType="VARCHAR"/>
-        <result column="username" property="username" jdbcType="VARCHAR"/>
-        <result column="email" property="email" jdbcType="VARCHAR"/>
-        <result column="address" property="address" jdbcType="VARCHAR"/>
-        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
-        <result column="avatar" property="avatar" jdbcType="VARCHAR"/>
-        <result column="user_status" property="userStatus" jdbcType="INTEGER"/>
-        <result column="user_level" property="userLevel" jdbcType="INTEGER"/>
-        <collection property="userShop" ofType="com.yhkj.model.UserShop">
-            <id column="shop_id" property="shopId" jdbcType="BIGINT"/>
-            <result column="company_type" property="companyType" jdbcType="INTEGER"/>
-            <result column="company_name" property="companyName" jdbcType="VARCHAR"/>
-            <result column="company_address" property="companyAddress" jdbcType="VARCHAR"/>
-            <result column="business_scope" property="businessScope" jdbcType="VARCHAR"/>
-            <result column="main_products" property="mainProducts" jdbcType="VARCHAR"/>
-            <result column="link_person" property="linkPerson" jdbcType="VARCHAR"/>
-            <result column="link_phone" property="linkPhone" jdbcType="VARCHAR"/>
-            <result column="shop_name" property="shopName" jdbcType="VARCHAR"/>
-            <result column="shop_introduce" property="shopIntroduce" jdbcType="VARCHAR"/>
-            <result column="shop_avatar_url" property="shopAvatarUrl" jdbcType="VARCHAR"/>
-            <result column="id_card_url" property="idCardUrl" jdbcType="VARCHAR"/>
-            <result column="business_license_url" property="businessLicenseUrl" jdbcType="VARCHAR"/>
-            <result column="apply_status" property="applyStatus" jdbcType="INTEGER"/>
-            <result column="refuse_apply_reason" property="refuseApplyReason" jdbcType="VARCHAR"/>
-            <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
-        </collection>
-    </resultMap>
-    <sql id="Base_Column_List">
-    user_id, phone, password, username, email, address, create_time, avatar, user_status, 
-    user_level
+<mapper namespace="com.yhkj.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.yhkj.model.User" >
+    <id column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="real_name" property="realName" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="user_phone" property="userPhone" jdbcType="VARCHAR" />
+    <result column="user_password" property="userPassword" jdbcType="VARCHAR" />
+    <result column="user_email" property="userEmail" jdbcType="VARCHAR" />
+    <result column="user_avatar" property="userAvatar" jdbcType="VARCHAR" />
+    <result column="user_idCard" property="userIdcard" jdbcType="VARCHAR" />
+    <result column="user_idCard_url" property="userIdcardUrl" jdbcType="VARCHAR" />
+    <result column="user_level" property="userLevel" jdbcType="INTEGER" />
+    <result column="user_status" property="userStatus" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="recommend_id" property="recommendId" jdbcType="BIGINT" />
+    <result column="wx_id" property="wxId" jdbcType="VARCHAR" />
+    <result column="qq_id" property="qqId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    user_id, real_name, nick_name, user_phone, user_password, user_email, user_avatar, 
+    user_idCard, user_idCard_url, user_level, user_status, create_time, recommend_id, 
+    wx_id, qq_id
   </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
-    select * from t_user left join t_user_shop shop on t_user.user_id=shop.user_id
-    where t_user.user_id = #{userId,jdbcType=BIGINT}
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_user
+    where user_id = #{userId,jdbcType=BIGINT}
   </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from t_user
     where user_id = #{userId,jdbcType=BIGINT}
   </delete>
-    <insert id="insert" parameterType="com.yhkj.model.User" keyColumn="user_id" keyProperty="userId"
-            useGeneratedKeys="true">
-    insert into t_user (user_id, phone, password, 
-      username, email, address, 
-      create_time, avatar, user_status, 
-      user_level)
-    values (#{userId,jdbcType=BIGINT}, #{phone,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{username,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{avatar,jdbcType=VARCHAR}, #{userStatus,jdbcType=INTEGER}, 
-      #{userLevel,jdbcType=INTEGER})
+  <insert id="insert" parameterType="com.yhkj.model.User" >
+    insert into t_user (user_id, real_name, nick_name, 
+      user_phone, user_password, user_email, 
+      user_avatar, user_idCard, user_idCard_url, 
+      user_level, user_status, create_time, 
+      recommend_id, wx_id, qq_id
+      )
+    values (#{userId,jdbcType=BIGINT}, #{realName,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, 
+      #{userPhone,jdbcType=VARCHAR}, #{userPassword,jdbcType=VARCHAR}, #{userEmail,jdbcType=VARCHAR}, 
+      #{userAvatar,jdbcType=VARCHAR}, #{userIdcard,jdbcType=VARCHAR}, #{userIdcardUrl,jdbcType=VARCHAR}, 
+      #{userLevel,jdbcType=INTEGER}, #{userStatus,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{recommendId,jdbcType=BIGINT}, #{wxId,jdbcType=VARCHAR}, #{qqId,jdbcType=VARCHAR}
+      )
   </insert>
-    <insert id="insertSelective" parameterType="com.yhkj.model.User">
-        insert into t_user
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="userId != null">
-                user_id,
-            </if>
-            <if test="phone != null">
-                phone,
-            </if>
-            <if test="password != null">
-                password,
-            </if>
-            <if test="username != null">
-                username,
-            </if>
-            <if test="email != null">
-                email,
-            </if>
-            <if test="address != null">
-                address,
-            </if>
-            <if test="createTime != null">
-                create_time,
-            </if>
-            <if test="avatar != null">
-                avatar,
-            </if>
-            <if test="userStatus != null">
-                user_status,
-            </if>
-            <if test="userLevel != null">
-                user_level,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="userId != null">
-                #{userId,jdbcType=BIGINT},
-            </if>
-            <if test="phone != null">
-                #{phone,jdbcType=VARCHAR},
-            </if>
-            <if test="password != null">
-                #{password,jdbcType=VARCHAR},
-            </if>
-            <if test="username != null">
-                #{username,jdbcType=VARCHAR},
-            </if>
-            <if test="email != null">
-                #{email,jdbcType=VARCHAR},
-            </if>
-            <if test="address != null">
-                #{address,jdbcType=VARCHAR},
-            </if>
-            <if test="createTime != null">
-                #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="avatar != null">
-                #{avatar,jdbcType=VARCHAR},
-            </if>
-            <if test="userStatus != null">
-                #{userStatus,jdbcType=INTEGER},
-            </if>
-            <if test="userLevel != null">
-                #{userLevel,jdbcType=INTEGER},
-            </if>
-        </trim>
-    </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.yhkj.model.User">
-        update t_user
-        <set>
-            <if test="phone != null">
-                phone = #{phone,jdbcType=VARCHAR},
-            </if>
-            <if test="password != null">
-                password = #{password,jdbcType=VARCHAR},
-            </if>
-            <if test="username != null">
-                username = #{username,jdbcType=VARCHAR},
-            </if>
-            <if test="email != null">
-                email = #{email,jdbcType=VARCHAR},
-            </if>
-            <if test="address != null">
-                address = #{address,jdbcType=VARCHAR},
-            </if>
-            <if test="createTime != null">
-                create_time = #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="avatar != null">
-                avatar = #{avatar,jdbcType=VARCHAR},
-            </if>
-            <if test="userStatus != null">
-                user_status = #{userStatus,jdbcType=INTEGER},
-            </if>
-            <if test="userLevel != null">
-                user_level = #{userLevel,jdbcType=INTEGER},
-            </if>
-        </set>
-        where user_id = #{userId,jdbcType=BIGINT}
-    </update>
-    <update id="updateByPrimaryKey" parameterType="com.yhkj.model.User">
+  <insert id="insertSelective" parameterType="com.yhkj.model.User" >
+    insert into t_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="realName != null" >
+        real_name,
+      </if>
+      <if test="nickName != null" >
+        nick_name,
+      </if>
+      <if test="userPhone != null" >
+        user_phone,
+      </if>
+      <if test="userPassword != null" >
+        user_password,
+      </if>
+      <if test="userEmail != null" >
+        user_email,
+      </if>
+      <if test="userAvatar != null" >
+        user_avatar,
+      </if>
+      <if test="userIdcard != null" >
+        user_idCard,
+      </if>
+      <if test="userIdcardUrl != null" >
+        user_idCard_url,
+      </if>
+      <if test="userLevel != null" >
+        user_level,
+      </if>
+      <if test="userStatus != null" >
+        user_status,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="recommendId != null" >
+        recommend_id,
+      </if>
+      <if test="wxId != null" >
+        wx_id,
+      </if>
+      <if test="qqId != null" >
+        qq_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="realName != null" >
+        #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null" >
+        #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null" >
+        #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userEmail != null" >
+        #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userAvatar != null" >
+        #{userAvatar,jdbcType=VARCHAR},
+      </if>
+      <if test="userIdcard != null" >
+        #{userIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="userIdcardUrl != null" >
+        #{userIdcardUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="userLevel != null" >
+        #{userLevel,jdbcType=INTEGER},
+      </if>
+      <if test="userStatus != null" >
+        #{userStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recommendId != null" >
+        #{recommendId,jdbcType=BIGINT},
+      </if>
+      <if test="wxId != null" >
+        #{wxId,jdbcType=VARCHAR},
+      </if>
+      <if test="qqId != null" >
+        #{qqId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yhkj.model.User" >
     update t_user
-    set phone = #{phone,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      username = #{username,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      address = #{address,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      avatar = #{avatar,jdbcType=VARCHAR},
-      user_status = #{userStatus,jdbcType=INTEGER},
-      user_level = #{userLevel,jdbcType=INTEGER}
+    <set >
+      <if test="realName != null" >
+        real_name = #{realName,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null" >
+        user_phone = #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="userPassword != null" >
+        user_password = #{userPassword,jdbcType=VARCHAR},
+      </if>
+      <if test="userEmail != null" >
+        user_email = #{userEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="userAvatar != null" >
+        user_avatar = #{userAvatar,jdbcType=VARCHAR},
+      </if>
+      <if test="userIdcard != null" >
+        user_idCard = #{userIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="userIdcardUrl != null" >
+        user_idCard_url = #{userIdcardUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="userLevel != null" >
+        user_level = #{userLevel,jdbcType=INTEGER},
+      </if>
+      <if test="userStatus != null" >
+        user_status = #{userStatus,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recommendId != null" >
+        recommend_id = #{recommendId,jdbcType=BIGINT},
+      </if>
+      <if test="wxId != null" >
+        wx_id = #{wxId,jdbcType=VARCHAR},
+      </if>
+      <if test="qqId != null" >
+        qq_id = #{qqId,jdbcType=VARCHAR},
+      </if>
+    </set>
     where user_id = #{userId,jdbcType=BIGINT}
   </update>
-
-    <select id="selectByKey" parameterType="com.yhkj.model.User" resultMap="BaseResultMap">
-        select * from t_user left join t_user_shop shop on t_user.user_id=shop.user_id
-        where 1=1
-        <if test="userId!=null and userId!= 0">
-            and t_user.user_id=#{userId}
-        </if>
-        <if test="phone!=null and phone!=''">
-            and t_user.phone like concat(concat('%',#{phone}),'%')
-        </if>
-        <if test="username!=null and username!=''">
-            and t_user.username like concat(concat('%',#{username}),'%')
-        </if>
-        <if test="userStatus!=null">
-            and t_user.user_status=#{userStatus,jdbcType=INTEGER}
-        </if>
-    </select>
-    <select id="selectByPhone" parameterType="com.yhkj.model.User" resultMap="BaseResultMap">
-        select * from t_user left join t_user_shop shop on t_user.user_id=shop.user_id
-        where 1=1
-        <if test="phone!=null and phone!=''">
-            and t_user.phone = #{phone}
-        </if>
-        <if test="userStatus!=null">
-            and t_user.user_status=#{userStatus,jdbcType=INTEGER}
-        </if>
-    </select>
-    <select id="getAllUserList" parameterType="com.yhkj.model.User" resultMap="BaseResultMap">
-        select * from t_user left join t_user_shop shop on t_user.user_id=shop.user_id
-        where 1=1
-        <if test="userId!=null and userId!= 0">
-            and t_user.user_id=#{userId}
-        </if>
-        <if test="phone!=null and phone!=''">
-            and t_user.phone like concat(concat('%',#{phone}),'%')
-        </if>
-        <if test="username!=null and username!=''">
-            and t_user.username like concat(concat('%',#{username}),'%')
-        </if>
-        <if test="email!=null and email!=''">
-            and t_user.email like concat(concat('%',#{email}),'%')
-        </if>
-        <if test="userLevel!=null and userLevel!=''">
-            and t_user.user_level=#{userLevel}
-        </if>
-        <if test="userStatus!=null and userStatus!=''">
-            and t_user.user_status=#{userStatus}
-        </if>
-        order by t_user.user_id
-    </select>
-
-    <select id="getAllUserCount" parameterType="com.yhkj.model.User" resultType="java.lang.Integer">
-        select count(1) count from t_user left join t_user_shop shop on t_user.user_id=shop.user_id
-        where 1=1
-        <if test="userId!=null and userId!= 0">
-            and t_user.user_id=#{userId}
-        </if>
-        <if test="phone!=null and phone!=''">
-            and t_user.phone like concat(concat('%',#{phone}),'%')
-        </if>
-        <if test="username!=null and username!=''">
-            and t_user.username like concat(concat('%',#{username}),'%')
-        </if>
-        <if test="email!=null and email!=''">
-            and t_user.email like concat(concat('%',#{email}),'%')
-        </if>
-        <if test="userLevel!=null and userLevel!=''">
-            and t_user.user_level=#{userLevel}
-        </if>
-        <if test="userStatus!=null and userStatus!=''">
-            and t_user.user_status=#{userStatus}
-        </if>
-        order by t_user.user_id
-    </select>
-
-    <select id="getAllUserListOnAdmin" parameterType="com.yhkj.model.User" resultMap="BaseResultMap">
-        select * from t_user
-        where 1=1
-        <if test="userId!=null and userId!= 0">
-            and t_user.user_id=#{userId}
-        </if>
-        <if test="phone!=null and phone!=''">
-            and t_user.phone like concat(concat('%',#{phone}),'%')
-        </if>
-        <if test="username!=null and username!=''">
-            and t_user.username like concat(concat('%',#{username}),'%')
-        </if>
-        <if test="email!=null and email!=''">
-            and t_user.email like concat(concat('%',#{email}),'%')
-        </if>
-        <if test="userLevel!=null and userLevel!=''">
-            and t_user.user_level=#{userLevel}
-        </if>
-        <if test="userStatus!=null and userStatus!=''">
-            and t_user.user_status=#{userStatus}
-        </if>
-        order by t_user.user_id
-    </select>
-
-    <select id="getAllUserCountOnAdmin" parameterType="com.yhkj.model.User" resultType="java.lang.Integer">
-        select count(1) count from t_user
-        where 1=1
-        <if test="userId!=null and userId!= 0">
-            and t_user.user_id=#{userId}
-        </if>
-        <if test="phone!=null and phone!=''">
-            and t_user.phone like concat(concat('%',#{phone}),'%')
-        </if>
-        <if test="username!=null and username!=''">
-            and t_user.username like concat(concat('%',#{username}),'%')
-        </if>
-        <if test="email!=null and email!=''">
-            and t_user.email like concat(concat('%',#{email}),'%')
-        </if>
-        <if test="userLevel!=null and userLevel!=''">
-            and t_user.user_level=#{userLevel}
-        </if>
-        <if test="userStatus!=null and userStatus!=''">
-            and t_user.user_status=#{userStatus}
-        </if>
-    </select>
-
+  <update id="updateByPrimaryKey" parameterType="com.yhkj.model.User" >
+    update t_user
+    set real_name = #{realName,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      user_phone = #{userPhone,jdbcType=VARCHAR},
+      user_password = #{userPassword,jdbcType=VARCHAR},
+      user_email = #{userEmail,jdbcType=VARCHAR},
+      user_avatar = #{userAvatar,jdbcType=VARCHAR},
+      user_idCard = #{userIdcard,jdbcType=VARCHAR},
+      user_idCard_url = #{userIdcardUrl,jdbcType=VARCHAR},
+      user_level = #{userLevel,jdbcType=INTEGER},
+      user_status = #{userStatus,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      recommend_id = #{recommendId,jdbcType=BIGINT},
+      wx_id = #{wxId,jdbcType=VARCHAR},
+      qq_id = #{qqId,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=BIGINT}
+  </update>
 </mapper>
