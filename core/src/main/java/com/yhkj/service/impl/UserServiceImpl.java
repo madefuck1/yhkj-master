@@ -24,23 +24,20 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserMapper userMapper;
 
-    @Autowired
-    UserShopMapper userShopMapper;
-
     @Override
     public void registerUser(User user) {
         if (user.getUserId() == null) {
             //新用户
             user.setUserStatus(UserStatusEnum.using.getType());
             user.setUserLevel(UserLevelEnum.buyer.getType());
-            userMapper.insert(user);
+            userMapper.insertSelective(user);
         }
     }
 
     @Override
     public boolean login(User user) {
-        String password = user.getPassword();
-        user.setPassword(null);
+        String password = user.getUserPassword();
+        user.setUserPassword(null);
         List<User> list = userMapper.selectByKey(user);
         if (list != null && list.size() > 0) {
             String md5Password = MD5Utils.md5(password);
@@ -61,6 +58,13 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectByPrimaryKey(id);
     }
 
+    @Override
+    public User loginByPhone(String phone) {
+        User user = new User();
+        user.setPhone(phone);
+        user.setUserStatus(0);
+        return userMapper.selectByPhone(user);
+    }
 
     @Override
     public User getByPhone(String phone) {
@@ -74,22 +78,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public User loginByPhone(String phone) {
-        User user = new User();
-        user.setPhone(phone);
-        user.setUserStatus(0);
-        return userMapper.selectByPhone(user);
-    }
-
-    @Override
-    public boolean delUserDetail(User user) {
-        if (userMapper.updateByPrimaryKeySelective(user) > 0) {
-            return userShopMapper.updateByPrimaryKeySelective(user.getUserShop()) > 0 ? true : false;
-        } else {
-            return false;
-        }
-    }
 
     @Override
     public PageHelp getAllUserList(User user, int page, int limit) {

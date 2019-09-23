@@ -16,19 +16,13 @@ public interface UserService {
 
     User getById(Long id);
 
-    User getByPhone(String phone);
+    User loginByPhone(String phone);
 
-    void updateUser(User user);
+    User getByPhone(String phone);
 
     PageHelp getAllUserList(User user, int page, int limit);
 
     PageHelp getAllUserListOnAdmin(User user, int page, int limit);
 
-    boolean delUserDetail(User user);
-
-    void resetUserPassword(User user);
-
-    boolean updUserAvatar(User user);
-
-    User loginByPhone(String phone);
+    void updateUser(User user);
 }
