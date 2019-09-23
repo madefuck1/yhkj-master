@@ -35,21 +35,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean login(User user) {
-        String password = user.getUserPassword();
-        user.setUserPassword(null);
-        List<User> list = userMapper.selectByKey(user);
-        if (list != null && list.size() > 0) {
-            String md5Password = MD5Utils.md5(password);
-            if (md5Password.equals(list.get(0).getPassword())) {
-                return true;
-            } else {
-                //密码错误
-                return false;
-            }
+    public User login(User user) {
+        if (user.getWxId() != null) {
+            return null;
+        } else if (user.getQqId() != null) {
+            return null;
         } else {
-            //用户不存在
-            return false;
+            String password = user.getUserPassword();
+            user.setUserPassword(null);
+            List<User> list = userMapper.selectByPhone(user.getUserPhone());
+            if (list != null && list.size() > 0) {
+                String md5Password = MD5Utils.md5(password);
+                if (md5Password.equals(list.get(0).getUserPassword())) {
+                    return list.get(0);
+                } else {
+                    //密码错误
+                    return null;
+                }
+            } else {
+                //用户不存在
+                return null;
+            }
         }
     }
 
@@ -59,18 +65,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User loginByPhone(String phone) {
-        User user = new User();
-        user.setPhone(phone);
-        user.setUserStatus(0);
-        return userMapper.selectByPhone(user);
+    public Boolean checkByPhone(String phone) {
+        return userMapper.selectByPhone(phone)!=null;
     }
 
     @Override
     public User getByPhone(String phone) {
-        User user = new User();
-        user.setPhone(phone);
-        List<User> list = userMapper.selectByKey(user);
+        List<User> list = userMapper.selectByPhone(phone);
         if (list != null && list.size() > 0) {
             return list.get(0);
         } else {
@@ -84,35 +85,14 @@ public class UserServiceImpl implements UserService {
         PageHelper.startPage(page, limit);
         PageHelp pageHelp = new PageHelp();
         List<User> users = userMapper.getAllUserList(user);
-        int count = userMapper.getAllUserCount(user);
-        pageHelp.setCount(count);
+        pageHelp.setCount(users.size());
         pageHelp.setData(users);
         return pageHelp;
     }
 
     @Override
-    public PageHelp getAllUserListOnAdmin(User user, int page, int limit) {
-        PageHelper.startPage(page, limit);
-        PageHelp pageHelp = new PageHelp();
-        List<User> users = userMapper.getAllUserListOnAdmin(user);
-        int count = userMapper.getAllUserCountOnAdmin(user);
-        pageHelp.setCount(count);
-        pageHelp.setData(users);
-        return pageHelp;
-    }
-
-    @Override
-    public void updateUser(User user) {
-        userMapper.updateByPrimaryKeySelective(user);
-    }
-
-    @Override
-    public boolean updUserAvatar(User user) {
+    public boolean updateUser(User user) {
         return userMapper.updateByPrimaryKeySelective(user) > 0 ? true : false;
     }
 
-    @Override
-    public void resetUserPassword(User user) {
-        userMapper.updateByPrimaryKeySelective(user);
-    }
 }

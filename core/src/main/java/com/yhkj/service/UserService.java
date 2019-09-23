@@ -12,17 +12,15 @@ public interface UserService {
 
     void registerUser(User user);
 
-    boolean login(User user);
+    User login(User user);
 
     User getById(Long id);
 
-    User loginByPhone(String phone);
+    Boolean checkByPhone(String phone);
 
     User getByPhone(String phone);
 
     PageHelp getAllUserList(User user, int page, int limit);
 
-    PageHelp getAllUserListOnAdmin(User user, int page, int limit);
-
-    void updateUser(User user);
+    boolean updateUser(User user);
 }

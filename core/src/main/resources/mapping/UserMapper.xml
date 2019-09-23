@@ -29,11 +29,26 @@
     from t_user
     where user_id = #{userId,jdbcType=BIGINT}
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+  <select id="selectByPhone" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select
     <include refid="Base_Column_List" />
     from t_user
-    where user_id = #{userId,jdbcType=BIGINT}
+    where
+    user_phone = #{userPhone,jdbcType=VARCHAR}
+  </select>
+  <select id="selectBywxId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_user
+    where
+    wx_id = #{wxId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByqqId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from t_user
+    where
+    qq_id = #{qqId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from t_user
@@ -216,4 +231,23 @@
       qq_id = #{qqId,jdbcType=VARCHAR}
     where user_id = #{userId,jdbcType=BIGINT}
   </update>
+  <select id="getAllUserCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    select count(1) from t_user where 1=1
+  </select>
+  <select id="getAllUserList" parameterType="com.yhkj.model.User" resultMap="BaseResultMap">
+    select * from t_user where 1=1
+    <if test="realName != null and realName != ''">
+      and real_name like concat(concat('%',#{realName}),'%')
+    </if>
+    <if test="nickName != null and nickName != ''">
+      and nick_name like concat(concat('%',#{nickName}),'%')
+    </if>
+    <if test="userPhone != null and userPhone != ''">
+      and user_phone like concat(concat('%',#{userPhone}),'%')
+    </if>
+    <if test="userEmail != null and userEmail != ''">
+      and user_email like concat(concat('%',#{userEmail}),'%')
+    </if>
+    order by create_time desc
+  </select>
 </mapper>
