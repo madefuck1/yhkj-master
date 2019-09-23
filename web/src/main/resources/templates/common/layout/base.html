@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <#assign contextPath=request.contextPath+"/static" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <title><@block name="title"/></title>
+    <meta name="keywords" content="">
+    <meta name="description" content="Jevon">
+
+     <link rel="stylesheet" href="${contextPath}/layui/css/layui.css">
+    <@block name="css"/>
+</head>
+<body class="layui-layout-body">
+
+        <div class="layui-body">
+            <!-- 内容主体区域 -->
+            <div style="padding: 15px;"><@block name="body"/></div>
+        </div>
+
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+        </div>
+    </div>
+</body>
+<#include "/common/includes/include.script.html"/>
+    <script>
+        //JavaScript代码区域
+        layui.use('element', function(){
+            var element = layui.element;
+
+        });
+    </script>
+<@block name="js"/>
+</html>

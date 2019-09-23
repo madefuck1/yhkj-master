@@ -1,0 +1,70 @@
+server:
+  port: 8081
+
+spring:
+  http:
+    multipart:
+      max-file-size: 10Mb
+      max-request-size: 100Mb
+
+  datasource:
+    name: Black
+    url: jdbc:mysql://121.199.22.218:3306/kkxl_app?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    username: root
+    password: root!123456
+#    正式库
+#    url: jdbc:mysql://localhost:3306/sql_27_54_235_89?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+#    username: sql_27_54_235_89
+#    password: X86y56cwmBMBPNsN
+#    测试库
+#   url: jdbc:mysql://27.54.235.89:3306/yhkj20190418?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+#   username: root
+#   password: 75333426e3072e9d
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+
+mybatis:
+  mapper-locations: classpath:mapping/*.xml
+  type-aliases-package: com.yhkj.model
+
+#pagehelper
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+#logger
+Logger:
+  level:
+    com.yhkj.mapper: info
+
+#ftp
+ftp:
+
+  host: 27.54.235.89
+  loginName: uploader
+  password: JmCHGKPswnJtHT7b
+#  host: 192.168.32.222
+#  loginName: uploader
+#  password: 123456
+
+#message
+message:
+  account: N625423_N9724353
+  password: WR1VndhAgl22b8
+  smsSingleRequestServerUrl: http://smsbj1.253.com/msg/send/json
+  report: true
