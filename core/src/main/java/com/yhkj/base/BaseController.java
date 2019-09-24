@@ -39,18 +39,11 @@ public class BaseController {
      * @param response
      * @return
      */
-    public String setToken(HttpServletResponse response, Long userId, int userStatus) {
+    public String setToken(HttpServletResponse response, Long userId) {
         String token = UUID.randomUUID().toString().replace("-", "");
         Cookie cookie = new Cookie("token", token);
         response.addCookie(cookie);
-        switch (userStatus) {
-            case 0:
-                RedisUtils.setString(token, userId.toString(),1296000);
-                break;
-            case 1:
-                RedisUtils.setString(token, userId.toString(), 43200);
-                break;
-        }
+        RedisUtils.setString(token, userId.toString(),1296000);
         return token;
     }
 }

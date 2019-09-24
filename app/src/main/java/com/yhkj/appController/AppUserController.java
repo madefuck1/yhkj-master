@@ -66,7 +66,7 @@ public class AppUserController extends BaseController {
         UserRepVo repVo=new UserRepVo();
         User user = userService.login_Phone(reqVo.getPhone(),reqVo.getPassword());
         if (user != null) {
-            String token = setToken(response, user.getUserId(), user.getUserStatus());
+            String token = setToken(response, user.getUserId());
             repVo.setToken(token);
             repVo.setSuccess(true);
         } else {
@@ -88,7 +88,7 @@ public class AppUserController extends BaseController {
         if (user != null) {
             boolean success = messageService.isExpiredOrCorrect(reqVo.getPhone(), reqVo.getVerMessage(), MessageTypeEnum.LOGIN.getType());
             if(success) {
-                String token = setToken(response, user.getUserId(), user.getUserStatus());
+                String token = setToken(response, user.getUserId());
                 repVo.setToken(token);
                 repVo.setSuccess(true);
             }else{
