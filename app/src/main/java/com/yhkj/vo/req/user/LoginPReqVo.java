@@ -19,5 +19,7 @@ public class LoginPReqVo {
     private String password;
     //验证码
     private String verMessage;
+    //确认密码
+    private String oldPassword;
 
 }

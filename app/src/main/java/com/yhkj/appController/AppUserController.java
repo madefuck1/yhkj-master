@@ -8,7 +8,6 @@ import com.yhkj.enums.MessageTypeEnum;
 import com.yhkj.model.User;
 import com.yhkj.service.MessageService;
 import com.yhkj.service.UserService;
-import com.yhkj.utils.DateUtils;
 import com.yhkj.utils.MD5Utils;
 import com.yhkj.utils.RedisUtils;
 import com.yhkj.utils.UploadPicUtil;
@@ -17,8 +16,6 @@ import com.yhkj.vo.rep.PicUrlRepVo;
 import com.yhkj.vo.rep.user.UserRepVo;
 import com.yhkj.vo.rep.user.dto.UserDto;
 import com.yhkj.vo.req.user.LoginPReqVo;
-import com.yhkj.vo.req.user.SuggestReqVo;
-import com.yhkj.vo.req.user.UpdByOldPasswordReqVo;
 import com.yhkj.vo.req.user.UpdateUserDetailReqVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -61,8 +58,8 @@ public class AppUserController extends BaseController {
 
     @ApiOperation(value = "登录 手机号+密码登录")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "phone", value = "手机号码", required = true, dataType = "LoginPReqVo"),
-            @ApiImplicitParam(name = "password", value = "登录密码", required = true, dataType = "LoginPReqVo")
+            @ApiImplicitParam(name = "phone", value = "手机号码", required = true, dataType = "LoginPReqVo-String"),
+            @ApiImplicitParam(name = "password", value = "登录密码", required = true, dataType = "LoginPReqVo-String")
     })
     @RequestMapping(value = "loginByPassword", method = RequestMethod.POST)
     public UserRepVo loginByPassword(@RequestBody LoginPReqVo reqVo, HttpServletResponse response) {
@@ -81,8 +78,8 @@ public class AppUserController extends BaseController {
     }
     @ApiOperation(value = "登录 手机号+验证码登录")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "phone", value = "手机号码", required = true, dataType = "LoginPReqVo"),
-            @ApiImplicitParam(name = "verMessage", value = "手机验证码", required = true, dataType = "LoginPReqVo")
+            @ApiImplicitParam(name = "phone", value = "手机号码", required = true, dataType = "LoginPReqVo-String"),
+            @ApiImplicitParam(name = "verMessage", value = "手机验证码", required = true, dataType = "LoginPReqVo-String")
     })
     @RequestMapping(value = "loginByPhone", method = RequestMethod.POST)
     public UserRepVo loginByPhone(@RequestBody LoginPReqVo reqVo, HttpServletResponse response) throws Exception {
@@ -108,7 +105,7 @@ public class AppUserController extends BaseController {
     }
 
     @ApiOperation(value = "重置密码")
-    @ApiImplicitParam(name = "verMessage", value = "手机验证码", required = true, dataType = "LoginPReqVo")
+    @ApiImplicitParam(name = "verMessage", value = "手机验证码", required = true, dataType = "LoginPReqVo-String")
     @RequestMapping(value = "resetPassword", method = RequestMethod.POST)
     public BaseRepVo resetPassword(@RequestBody LoginPReqVo ReqVo) throws Exception {
         UserRepVo repVo=new UserRepVo();
@@ -122,38 +119,59 @@ public class AppUserController extends BaseController {
             repVo.setSuccess(false);
             repVo.setMessage(StaticConstant.CODE_ERROR);
         }
+        return repVo;
     }
 
     @MemberAccess
     @ApiOperation(value = "验证码注册，设置账户密码")
-    @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "LoginPReqVo")
+    @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "LoginPReqVo-String")
     @RequestMapping(value = "updatePassword", method = RequestMethod.POST)
     public BaseRepVo updatePassword(@RequestBody LoginPReqVo reqVo, HttpServletRequest request) {
-        BaseRepVo repVo = loginPReqVoCheck(reqVo);
-        if (repVo.isSuccess()) {
-            User user = getUserInfo(request);
-            user.setUserPassword(MD5Utils.md5(reqVo.getPassword()));
-            userService.updateUser(user);
-            repVo.setMessage(StaticConstant.PASSWORD_UPDATE);
+        BaseRepVo repVo = new BaseRepVo();
+        if (StringUtils.isBlank(reqVo.getPhone()) || "".equals(reqVo.getPhone())) {
+            repVo.setSuccess(false);
+            repVo.setMessage(StaticConstant.USER_ERROR2);
+            return repVo;
         }
+        if (StringUtils.isBlank(reqVo.getPassword()) || "".equals(reqVo.getPassword())) {
+            repVo.setSuccess(false);
+            repVo.setMessage(StaticConstant.USER_ERROR3);
+            return repVo;
+        }
+        User user = getUserInfo(request);
+        user.setUserPassword(MD5Utils.md5(reqVo.getPassword()));
+        userService.updateUser(user);
+        repVo.setMessage(StaticConstant.PASSWORD_UPDATE);
         return repVo;
     }
 
     @MemberAccess
     @ApiOperation(value = "登录根据原密码更新密码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "password", value = "新密码", required = true, dataType = "LoginPReqVo-String"),
+            @ApiImplicitParam(name = "oldPassword", value = "原密码", required = true, dataType = "LoginPReqVo-String")
+    })
     @RequestMapping(value = "updatePasswordByOldPassword", method = RequestMethod.POST)
-    public BaseRepVo updatePasswordByOldPassword(@RequestBody UpdByOldPasswordReqVo reqVo, HttpServletRequest request) {
-        BaseRepVo repVo = UpdByOldPasswordCheck(reqVo);
-        if (repVo.isSuccess()) {
-            User user = getUserInfo(request);
-            if (MD5Utils.md5(reqVo.getOldPassword()).equals(user.getUserPassword())) {
-                user.setUserPassword(MD5Utils.md5(reqVo.getPassword()));
-                userService.updateUser(user);
-                repVo.setMessage(StaticConstant.PASSWORD_UPDATE);
-            } else {
-                repVo.setSuccess(false);
-                repVo.setMessage(StaticConstant.PASSWORD_INCORRECT);
-            }
+    public BaseRepVo updatePasswordByOldPassword(@RequestBody LoginPReqVo reqVo, HttpServletRequest request) {
+        BaseRepVo repVo = new BaseRepVo();
+        if (StringUtils.isBlank(reqVo.getOldPassword()) || "".equals(reqVo.getOldPassword())) {
+            repVo.setSuccess(false);
+            repVo.setMessage(StaticConstant.USER_ERROR5);
+            return repVo;
+        }
+        if (StringUtils.isBlank(reqVo.getPassword()) || "".equals(reqVo.getPassword())) {
+            repVo.setSuccess(false);
+            repVo.setMessage(StaticConstant.USER_ERROR6);
+            return repVo;
+        }
+        User user = getUserInfo(request);
+        if (MD5Utils.md5(reqVo.getOldPassword()).equals(user.getUserPassword())) {
+            user.setUserPassword(MD5Utils.md5(reqVo.getPassword()));
+            userService.updateUser(user);
+            repVo.setMessage(StaticConstant.PASSWORD_UPDATE);
+        } else {
+            repVo.setSuccess(false);
+            repVo.setMessage(StaticConstant.PASSWORD_INCORRECT);
         }
         return repVo;
     }
@@ -190,17 +208,6 @@ public class AppUserController extends BaseController {
         return repVo;
     }
 
-
-    private BaseRepVo suggestReqVoCheck(SuggestReqVo suggestReqVo) {
-        BaseRepVo repVo = new BaseRepVo();
-        if (StringUtils.isBlank(suggestReqVo.getMessage()) || "".equals(suggestReqVo.getMessage())) {
-            repVo.setSuccess(false);
-            repVo.setMessage(StaticConstant.USER_ERROR1);
-            return repVo;
-        }
-        return repVo;
-    }
-
     @MemberAccess
     @ApiOperation("注销登录")
     @RequestMapping(value = "loginOut", method = RequestMethod.POST)
@@ -216,71 +223,7 @@ public class AppUserController extends BaseController {
     }
 
 
-    private UserRepVo loginPReqVoCheck(LoginPReqVo reqVo) {
-        UserRepVo repVo = new UserRepVo();
-        if (StringUtils.isBlank(reqVo.getPhone()) || "".equals(reqVo.getPhone())) {
-            repVo.setSuccess(false);
-            repVo.setMessage(StaticConstant.USER_ERROR2);
-            return repVo;
-        }
-        if (StringUtils.isBlank(reqVo.getPassword()) || "".equals(reqVo.getPassword())) {
-            repVo.setSuccess(false);
-            repVo.setMessage(StaticConstant.USER_ERROR3);
-            return repVo;
-        }
-        return repVo;
-    }
-
-    private UserRepVo loginCReqVoCheck(LoginCReqVo reqVo) {
-        UserRepVo repVo = new UserRepVo();
-        if (StringUtils.isBlank(reqVo.getCode()) || "".equals(reqVo.getCode())) {
-            repVo.setSuccess(false);
-            repVo.setMessage(StaticConstant.USER_ERROR4);
-            return repVo;
-        }
-        if (StringUtils.isBlank(reqVo.getPhone()) || "".equals(reqVo.getPhone())) {
-            repVo.setSuccess(false);
-            repVo.setMessage(StaticConstant.USER_ERROR2);
-            return repVo;
-        }
-        return repVo;
-    }
-
-    private UserRepVo loginCAndPReqVoCheck(LoginCAndPReqVo reqVo) {
-        UserRepVo repVo = new UserRepVo();
-        if (StringUtils.isBlank(reqVo.getCode()) || "".equals(reqVo.getCode())) {
-            repVo.setSuccess(false);
-            repVo.setMessage(StaticConstant.USER_ERROR4);
-            return repVo;
-        }
-        if (StringUtils.isBlank(reqVo.getPhone()) || "".equals(reqVo.getPhone())) {
-            repVo.setSuccess(false);
-            repVo.setMessage(StaticConstant.USER_ERROR2);
-            return repVo;
-        }
-        if (StringUtils.isBlank(reqVo.getPassword()) || "".equals(reqVo.getPassword())) {
-            repVo.setSuccess(false);
-            repVo.setMessage(StaticConstant.USER_ERROR3);
-            return repVo;
-        }
-        return repVo;
-    }
-
-    private UserRepVo UpdByOldPasswordCheck(UpdByOldPasswordReqVo reqVo) {
-        UserRepVo repVo = new UserRepVo();
-        if (StringUtils.isBlank(reqVo.getOldPassword()) || "".equals(reqVo.getOldPassword())) {
-            repVo.setSuccess(false);
-            repVo.setMessage(StaticConstant.USER_ERROR5);
-            return repVo;
-        }
-        if (StringUtils.isBlank(reqVo.getPassword()) || "".equals(reqVo.getPassword())) {
-            repVo.setSuccess(false);
-            repVo.setMessage(StaticConstant.USER_ERROR6);
-            return repVo;
-        }
-        return repVo;
-    }
-
+    //############工具类
     private UserDto tranformDto(User user) {
         UserDto dto = new UserDto();
         dto.setUserId(user.getUserId());
@@ -310,4 +253,15 @@ public class AppUserController extends BaseController {
 //        }
         return dto;
     }
+
+    ////备用，建议项
+//    private BaseRepVo suggestReqVoCheck(SuggestReqVo suggestReqVo) {
+//        BaseRepVo repVo = new BaseRepVo();
+//        if (StringUtils.isBlank(suggestReqVo.getMessage()) || "".equals(suggestReqVo.getMessage())) {
+//            repVo.setSuccess(false);
+//            repVo.setMessage(StaticConstant.USER_ERROR1);
+//            return repVo;
+//        }
+//        return repVo;
+//    }
 }
