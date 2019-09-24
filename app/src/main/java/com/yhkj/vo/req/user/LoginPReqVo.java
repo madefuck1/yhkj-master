@@ -10,7 +10,14 @@ import lombok.Setter;
  */
 @Setter
 @Getter
-public class LoginPReqVo extends LoginBaseReqVo {
+public class LoginPReqVo {
+    //手机号
+    private String phone;
+    //邮箱
+    private String email;
+    //密码
+    private String password;
+    //验证码
+    private String verMessage;
 
-    private String Password;
 }

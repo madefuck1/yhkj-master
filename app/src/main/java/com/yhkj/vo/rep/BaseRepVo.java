@@ -24,7 +24,7 @@ public class BaseRepVo {
     private String token;
     @ApiModelProperty(value = "暂时没用到",name = "type")
     private int type;
-    @ApiModelProperty(value = "暂时只在登录的时候用到，用来判断是否为卖家(0:买家；1：申请中；2：申请成功；3：申请失败；99：店铺关闭)",name = "code")
+    @ApiModelProperty(value = "暂时只在登录的时候用到，用来判断是否为卖家(0成功)",name = "code")
     private int code;
 
 

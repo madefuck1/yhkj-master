@@ -26,9 +26,6 @@ public class UserDto {
     @ApiModelProperty(value = "邮箱",name = "email")
     private String email;
 
-    @ApiModelProperty(value = "地址",name = "address")
-    private String address;
-
     @ApiModelProperty(value = "头像路径",name = "avatarUrl")
     private String avatarUrl;
 

@@ -12,7 +12,7 @@ public interface UserService {
 
     void registerUser(User user);
 
-    User login(User user);
+    User login_Phone(String phone,String password);
 
     User getById(Long id);
 

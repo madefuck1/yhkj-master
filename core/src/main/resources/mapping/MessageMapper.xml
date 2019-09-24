@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yhkj.mapper.MessageMapper">
+    <resultMap id="BaseResultMap" type="com.yhkj.model.Message">
+        <id column="message_id" property="messageId" jdbcType="BIGINT"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="message_status" property="messageStatus" jdbcType="INTEGER"/>
+        <result column="message_time" property="messageTime" jdbcType="TIMESTAMP"/>
+        <result column="message_type" property="messageType" jdbcType="INTEGER"/>
+        <result column="message_sender" property="messageSender" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    message_id, phone, content, message_status, message_time, message_type, message_sender
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from t_message
+        where message_id = #{messageId,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_message
+    where message_id = #{messageId,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.yhkj.model.Message" useGeneratedKeys="true" keyProperty="messageId"
+            keyColumn="messageId">
+    insert into t_message (message_id, phone,
+      content, message_status, message_time,
+      message_type, message_sender)
+    values (#{messageId,jdbcType=BIGINT}, #{phone,jdbcType=VARCHAR},
+      #{content,jdbcType=VARCHAR}, #{messageStatus,jdbcType=INTEGER}, #{messageTime,jdbcType=TIMESTAMP},
+      #{messageType,jdbcType=INTEGER}, #{messageSender,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.yhkj.model.Message">
+        insert into t_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="messageId != null">
+                message_id,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="messageStatus != null">
+                message_status,
+            </if>
+            <if test="messageTime != null">
+                message_time,
+            </if>
+            <if test="messageType != null">
+                message_type,
+            </if>
+            <if test="messageSender != null">
+                message_sender,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="messageId != null">
+                #{messageId,jdbcType=BIGINT},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="messageStatus != null">
+                #{messageStatus,jdbcType=INTEGER},
+            </if>
+            <if test="messageTime != null">
+                #{messageTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="messageType != null">
+                #{messageType,jdbcType=INTEGER},
+            </if>
+            <if test="messageSender != null">
+                #{messageSender,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.yhkj.model.Message">
+        update t_message
+        <set>
+            <if test="phone != null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="messageStatus != null">
+                message_status = #{messageStatus,jdbcType=INTEGER},
+            </if>
+            <if test="messageTime != null">
+                message_time = #{messageTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="messageType != null">
+                message_type = #{messageType,jdbcType=INTEGER},
+            </if>
+            <if test="messageSender != null">
+                message_sender = #{messageSender,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where message_id = #{messageId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.yhkj.model.Message">
+    update t_message
+    set phone = #{phone,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      message_status = #{messageStatus,jdbcType=INTEGER},
+      message_time = #{messageTime,jdbcType=TIMESTAMP},
+      message_type = #{messageType,jdbcType=INTEGER},
+      message_sender = #{messageSender,jdbcType=VARCHAR}
+    where message_id = #{messageId,jdbcType=BIGINT}
+  </update>
+
+    <select id="getMessageList" parameterType="com.yhkj.model.Message" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_message where 1=1
+        <if test="phone != null">
+            and phone like concat(concat('%',#{phone}),'%')
+        </if>
+        <if test="content != null">
+            and content = #{content,jdbcType=VARCHAR}
+        </if>
+        <if test="messageStatus != null">
+            and message_status = #{messageStatus,jdbcType=INTEGER}
+        </if>
+        <if test="messageType != null">
+            and message_type = #{messageType,jdbcType=INTEGER}
+        </if>
+        <if test="beginDate != null">
+            <![CDATA[
+              and message_time > #{beginDate,jdbcType=TIMESTAMP}
+          ]]>
+        </if>
+        <if test="endDate != null">
+            <![CDATA[
+            and message_time < #{endDate,jdbcType=TIMESTAMP}
+           ]]>
+        </if>
+        order by message_time desc
+    </select>
+
+    <select id="getMessageListCount" parameterType="com.yhkj.model.Message" resultType="java.lang.Integer">
+        select count(1)
+        from t_message where 1=1
+        <if test="phone != null">
+            and phone like concat(concat('%',#{phone}),'%')
+        </if>
+        <if test="content != null">
+            and content = #{content,jdbcType=VARCHAR}
+        </if>
+        <if test="messageStatus != null">
+            and message_status = #{messageStatus,jdbcType=INTEGER}
+        </if>
+        <if test="messageType != null">
+            and message_type = #{messageType,jdbcType=INTEGER}
+        </if>
+        <if test="beginDate != null">
+            <![CDATA[
+              and message_time > #{beginDate,jdbcType=TIMESTAMP}
+          ]]>
+        </if>
+        <if test="endDate != null">
+            <![CDATA[
+            and message_time < #{endDate,jdbcType=TIMESTAMP}
+           ]]>
+        </if>
+    </select>
+
+
+    <select id="getCodeByPhone" parameterType="com.yhkj.model.Message" resultMap="BaseResultMap">
+        select
+        *
+        from t_message where 1=1
+        <if test="phone != null">
+            and phone = #{phone,jdbcType=VARCHAR}
+        </if>
+        <if test="messageType != null">
+            and message_type = #{messageType,jdbcType=INTEGER}
+        </if>
+        <if test="content != null">
+            and content = #{content,jdbcType=VARCHAR}
+        </if>
+        order by message_time desc
+        limit 1
+    </select>
+
+
+</mapper>

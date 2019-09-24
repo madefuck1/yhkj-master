@@ -35,27 +35,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User login(User user) {
-        if (user.getWxId() != null) {
-            return null;
-        } else if (user.getQqId() != null) {
-            return null;
-        } else {
-            String password = user.getUserPassword();
-            user.setUserPassword(null);
-            List<User> list = userMapper.selectByPhone(user.getUserPhone());
-            if (list != null && list.size() > 0) {
-                String md5Password = MD5Utils.md5(password);
-                if (md5Password.equals(list.get(0).getUserPassword())) {
-                    return list.get(0);
-                } else {
-                    //密码错误
-                    return null;
-                }
+    public User login_Phone(String phone,String password) {
+        List<User> list = userMapper.selectByPhone(phone);
+        if (list != null && list.size() > 0) {
+            String md5Password = MD5Utils.md5(password);
+            if (md5Password.equals(list.get(0).getUserPassword())) {
+                return list.get(0);
             } else {
-                //用户不存在
+                //密码错误
                 return null;
             }
+        } else {
+            //用户不存在
+            return null;
         }
     }
 
